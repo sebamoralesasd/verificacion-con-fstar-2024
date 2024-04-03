@@ -6,19 +6,19 @@ open FStar.Mul
 let suma (x y : int) : int = x + y
 
 (* Defina una función suma sobre naturales *)
-let addnat (x y : nat) : nat = admit()
+let addnat (x y : nat) : nat = x + y //admit()
 
 (* Defina una función suma de 3 argumentos, que use la anterior. *)
-let suma3 (x y z : int) : int = admit()
+let suma3 (x y z : int) : int = suma x (suma y z)
 
 (* Defina una función que incremente un número en 1. *)
-let incr (x:int) : int = admit()
+let incr (x:int) : int = suma x 1
 
 (* Dé más tipos a la función de incremento. ¿Cómo se comparan
 estos tipos? *)
-let incr'   (x:nat) : int = admit()
-let incr''  (x:nat) : nat = admit()
-let incr''' (x:nat) : y:int{y = x+1} = admit()
+let incr'   (x:nat) : int = suma x 1
+let incr''  (x:nat) : nat = addnat x 1
+let incr''' (x:nat) : y:int{y = x+1} = incr'' x
 
 (* Un tipo refinado es un subtipo del tipo base, se puede
 usar sin coerción. El subtipado es también consciente de funciones. *)
@@ -38,31 +38,34 @@ let incr'''' (x:int{par x}) : y:int{impar y} = x + 1
 (* ¿Por qué falla la siguiente definición? Arreglarla. *)
 // El atributo expect_failure causa que F* chequeé que la definición
 // subsiguiente falle. Borrarlo para ver el error real.
-[@@expect_failure]
-let muldiv (a b : int) : y:int{y = a} = (a / b) * b
+//[@@expect_failure]
+//let muldiv (a : int) (b : int{b <> 0}) : y:int{y = a} = (a / b) * b
 
 (* Defina una función de valor absoluto *)
-let abs (x:int) : nat = admit()
+let abs (x:int) : nat = if x > 0 then x else -x
 
 (* Defina una función que calcule el máximo de dos enteros. *)
-let max (x y : int) : int = admit()
+let max (x y : int) : mx:int{(mx >= x && mx >= y) && (mx = x || mx = y)} = if x > y then x else y
 
 (* Dé tipos más expresivos a max.
    1- Garantizando que el resultado es igual a alguno de los argumentos
    2- Además, garantizando que el resultado es mayor o igual a ambos argumentos. *)
 
 (* Defina la función de fibonacci, de enteros a enteros,
-o alguna restricción apropiada. *)
-let fib (x:int) : int = admit()
+o alguna restricción apropiada. 
+Ver libro.
+*)
+
+let fib (x:nat) : nat = admit()
 
 (* Defina un tipo 'digito' de naturales de un sólo dígito. *)
-// type digito =
+type digito = y:nat{y<10}
 
 (* Defina una función que compute el máximo de tres dígitos, usando
 alguna definición anterior. El resultado debe ser de tipo digito.
 ¿Por qué funciona esto? ¿De cuáles partes anteriores del archivo
 depende, exactamente? *)
-// let max_digito (x y z : digito) : digito =
+let max_digito (x y z : digito) : digito = max x (max y z)
 
 (* Defina la función factorial. ¿Puede darle un mejor tipo? *)
 let fac (x:int) : int = admit()
