@@ -107,11 +107,15 @@ let ex_falso (#a:Type) (f : falso) : a =
 
 (* Demostrar *)
 let neu1 (#a:Type) : oo a falso -> a =
-  admit()
+  function
+    | Inl x -> x
+    | Inr _ -> falso
+  //admit()
 
 (* Demostrar *)
 let neu2 (#a:Type) : a -> oo a falso =
-  admit()
+  fun (x:a) -> Inl x
+  //admit()
 
 (* Distribución de `yy` sobre `oo`, en ambas direcciones *)
 let distr_yyoo_1 (#a #b #c : Type)
@@ -127,7 +131,10 @@ let distr_yyoo_1 (#a #b #c : Type)
 let distr_yyoo_2 (#a #b #c : Type)
   : oo (yy a b) (yy a c) -> yy a (oo b c)
 =
-  admit()
+  function
+    | Inl (xa, xb) -> (xa, Inl xb)
+    | Inr (xa, xc) -> (xa, Inr xc)
+  //admit()
 
 let distr_ooyy_1 (#a #b #c : Type)
   : oo a (yy b c) -> yy (oo a b) (oo a c)
@@ -139,22 +146,24 @@ let distr_ooyy_2 (#a #b #c : Type)
 =
   admit()
 
-let modus_tollens (#a #b : Type)
+let modus_tollens (#a #b : Type) (x:a)
   : (a -> b) -> (no b -> no a)
-=
+= //fun (f:a->b) -> (fun (nb: no b) -> nb (f x))
   admit()
   (* Vale la recíproca? *)
 
 let modus_tollendo_ponens (#a #b : Type)
   : (oo a b) -> (no a -> b)
 =
-  admit()
+  function
+    | Inl x -> fun (nab: no a) -> nab x
+    | Inr y -> fun (nab: no a) -> y
   (* Vale la recíproca? *)
 
 let modus_ponendo_tollens (#a #b : Type)
   : no (yy a b) -> (a -> no b)
 =
-  admit()
+  fun noyy -> fun x -> fun y -> noyy (x, y)
   (* Vale la recíproca? *)
 
 (* Declare y pruebe, si es posible, las leyes de De Morgan
