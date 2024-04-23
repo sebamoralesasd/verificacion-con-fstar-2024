@@ -148,8 +148,8 @@ let distr_ooyy_2 (#a #b #c : Type)
 
 let modus_tollens (#a #b : Type) (x:a)
   : (a -> b) -> (no b -> no a)
-= //fun (f:a->b) -> (fun (nb: no b) -> nb (f x))
-  admit()
+= fun f g x -> g (f x)
+  //admit()
   (* Vale la recíproca? *)
 
 let modus_tollendo_ponens (#a #b : Type)
@@ -169,18 +169,30 @@ let modus_ponendo_tollens (#a #b : Type)
 (* Declare y pruebe, si es posible, las leyes de De Morgan
 para `yy` y `oo`. ¿Son todas intuicionistas? *)
 
+                                // oo (a -> falso) (b -> falso) -> yy a b -> falso
 let demorgan1_ida (#a #b : Type) : oo (no a) (no b) -> no (yy a b) =
-  admit()
+  //admit() 
+  fun o (ya, yb) ->
+    match o with
+      | Inl oa -> oa ya
+      | Inr ob -> ob yb 
 
+                                  // (yy a b -> falso) -> oo (no a) (no b)
 let demorgan1_vuelta (#a #b : Type) : no (yy a b) -> oo (no a) (no b) =
   admit()
-
+                                // yy (no a) (no b) -> oo a b -> falso
 let demorgan2_ida (#a #b : Type) : yy (no a) (no b) -> no (oo a b) =
-  admit()
+  fun (na, nb) n ->
+    match n with
+      | Inl oa -> na oa
+      | Inr ob -> nb ob
 
+                                  // (oo a b -> falso) -> yy (no a) (no b)
 let demorgan2_vuelta (#a #b : Type) : no (oo a b) -> yy (no a) (no b) =
-  admit()
-
+  fun f -> 
+    let na:a->falso = fun x -> f (Inl x) in
+    let nb:b->falso = fun y -> f (Inr y) 
+    in (na, nb)
 
  (* P y no P no pueden valer a la vez. *)
 let no_contradiccion (#a:Type) : no (yy a (no a)) =
