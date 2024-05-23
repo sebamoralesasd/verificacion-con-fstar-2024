@@ -20,6 +20,18 @@ let lift (ty : l_ty) : Type =
 
 val eval (#ty:l_ty) (e : expr ty) : Tot (lift ty)
 
-let rec eval (#ty:l_ty) (e : expr ty) : Tot (lift ty) =
-  admit()
+let rec eval (#ty:l_ty) (e : expr ty) : Tot (lift ty) (decreases e) =
+  match e with
+    | EInt i -> 
+      // assert (ty == Int);   // la instruccion decreases permite comentar los asserts.
+      i 
+    | EBool b ->
+      // assert(ty == Bool);
+      b
+    | EAdd l r ->
+      //assert (ty == Int);
+      //let l : expr Int = l in
+      //let r : expr Int = r in
+      eval #ty l + eval #ty r
+    | _ -> admit()
   (* Completar *)
